@@ -3,19 +3,15 @@ const { createApp } = Vue;
       const vm= createApp({
         data() {
           return {
-            message: "<p>Esto es un mensaje que se va a meter en un template! y se está imprimiendo sin tocar el HTML pero no renderiza la tag p </p>",
-            message1: "<p>Este mensaje se está imprimiendo usando v-html <br> deberíamos ser atentos de no usar NUNCA en inputs que usen los usuarios, como buen practica </p>",
-            name:'Bitcoin'
+            img: "https://i.picsum.photos/id/672/200/300.jpg?hmac=jesIP8UU3kCf3sIVWhv1x1qzFDtzqroRy5vY_47ss1I",
+            
+            name:'photo_subway'
         };
-    },  //LAS DIRECTIVAS SE AGREGAN COMO ATRIBUTOS A LOS TAGS DE HTML
-    //v-text es un adirectiva para pasarle argumentos DE textContent de js
-//<--usando la directiva traemos desde la variable text
-     template:`<div v-text="message"> </div>
-     <br><div v-once v-text="name"> </div>
-     <br><div v-html="message1"> </div>`,//v-once se ocupa para poder renderizar solo una vez el de la primera vez
-
-    // jugo:`<div v-text="name"></div>`,
-    // template1:`<div v-html="jugo"></div>`
+    },
+    //v-bind -como es una directuva de Vue, una buena practica sería usarlo dentro de un archivo.js 
+    //y no en Tags html directamente. Y mejor aún dentro del template de la aplicacion  quese esté creando.
+     template:`<img v-bind:src="img" v-bind>`,
+//OTRA FORMA DE USAR v-bind: ES ASÍ -->":"
         
                 
           }).mount('#app');
