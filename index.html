@@ -12,6 +12,7 @@
 
     <div id="app">
     
+      
         </div>
 
     <script >
@@ -20,27 +21,42 @@
         data(){
           return{
             text:'Hola Mundo desde vue!',
-            counter:0
+            text2:'hola!',
+            text3:'Aqui se cambia con v-model'
           };
         },
         methods:{
-          increment(){
-            console.log('click!')
-            this.counter ++;
+          input(e){
+            this.text= e.target.value;
           },
-          decrement(){
-            console.log('click!')
-            this.counter --;
+          
+          input2(e){
+            this.text2= e.target.value;
           },
-          submit(e){
-            e.prevent
+          input3(e){
+            this.text2= e.target.value;
           }
         },
-        template:
-          `<h1>{{counter}}</h1>
-          <button @click="increment" >incrementar</button>
-          <button @click="decrement" >disminuir</button>`
+        template:`<p>{{text}} reactividad con la directiva "v-on:input"</p><p>ingresa algo en el input</p>
+        <input 
+        type="text" 
+        v-on:input="input" 
+        v-bind:value="text">
         
+        <p>{{text2}}  reactividad con la directiva "v-on:change" pero en simplificado osea @:change</p><p>ingresa algo en el input</p>
+        <input id="change"
+        type="text" 
+        @change="input2" 
+        v-bind:value="text2">
+        
+        <p>con v-model podemos hacer lo mismo que usando un eventlistener con v-model="varName" le pasamos la variable con la cual va a ser reactiva</p>
+        <p>{{text3}}</p>
+        
+        <input 
+        type="text" 
+        v-model="text3" >
+        `
+       
       }).mount('#app');
       console.log(vm);
     </script>
