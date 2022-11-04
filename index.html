@@ -17,44 +17,26 @@
 
     <script >
       // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
-      const vm=Vue.createApp({
+      const vm = Vue.createApp({
         data(){
           return{
-            text:'Hola Mundo desde vue!',
-            text2:'hola!',
-            text3:'Aqui se cambia con v-model'
+            name:'Oscar',
+            lastName:'Mora',
+            now : new Date()
           };
         },
-        methods:{
-          input(e){
-            this.text= e.target.value;
+        computed:{/*RECORDAR siempre hacer el return dentro de las computed functions*/
+          fullName(){
+            return this.name+''+this.lastName;
           },
-          
-          input2(e){
-            this.text2= e.target.value;
-          },
-          input3(e){
-            this.text2= e.target.value;
+          today(){
+            return this.now.toLocaleDateString();
           }
         },
-        template:`<p>{{text}} reactividad con la directiva "v-on:input"</p><p>ingresa algo en el input</p>
-        <input 
-        type="text" 
-        v-on:input="input" 
-        v-bind:value="text">
-        
-        <p>{{text2}}  reactividad con la directiva "v-on:change" pero en simplificado osea @:change</p><p>ingresa algo en el input</p>
-        <input id="change"
-        type="text" 
-        @change="input2" 
-        v-bind:value="text2">
-        
-        <p>con v-model podemos hacer lo mismo que usando un eventlistener con v-model="varName" le pasamos la variable con la cual va a ser reactiva</p>
-        <p>{{text3}}</p>
-        
-        <input 
-        type="text" 
-        v-model="text3" >
+
+        template:
+        `<p>{{fullName}}</p>
+         <p>{{today}}</p>
         `
        
       }).mount('#app');
