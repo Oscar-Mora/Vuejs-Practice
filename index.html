@@ -10,51 +10,97 @@
 </head>
 <body>
 
-    <div id="app">
-      
-      
-        </div>
-
-    <script >
-      // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
-      const vm = Vue.createApp({
-        data(){
-          return{
-            name:'Oscar Mora',
-            text:'Puerta cerrada',
-            open:false
-            
-          };
-        },
-        watch:{/*RECORDAR no hacer watchers muy complejos
-LOS WATCHERS NO SE INVOCAN - Y NO HACEN RETURNS*/
-          text(valorNuevo, valorViejo){
-            console.log("watcher!", valorNuevo,valorViejo, this.text)
-          },//aqui se ve como podemos acceder al valor actual del text al final del proceso del watcher
-//EJERCICIO DE WATCHER, ABRIR O CERRAR PUERTA
-          open(value){
-            if (value){
-              this.text ="La puerta está abierta";
-            }
-            else{
-              this.text = "la puerta está cerrada";
-            }
-          }
-
-        },
-
-        template:
-        `<div><p>{{name}}</p>
-          <p>{{text}}</p>
-          <button @click="open = !open"> {{ open ? "Cerrar" : "Abrir"}}</button>
-          </div>
-        
-
+  <div id="app">
+    
+    
+      </div>
+<script >
+    // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
+  const vm = Vue.createApp({
+    data(){
+      return{
+        name:'Oscar Mora',
+        text:'Puerta cerrada',
+        open:false,
+        styles:{
+        }
          
-        `
+       };
+      },
+  watch:{/*RECORDAR no hacer watchers muy complejos
+  LOS WATCHERS NO SE INVOCAN - Y NO HACEN RETURNS*/
+      text(valorNuevo, valorViejo){
+        console.log("watcher!", valorNuevo,valorViejo, this.text)
+      },//aqui se ve como podemos acceder al valor actual del text al final del proceso del watcher
+    //EJERCICIO DE WATCHER, ABRIR O CERRAR PUERTA
+      open(value){
+        if (value){
+          this.text ="La puerta está abierta";
+        }
+        else{
+          this.text = "la puerta está cerrada";
+        }
+      }
+    },
+    computed:{
+      label(){
+        if (this.open){
+          return 'Cerrar'
+        }//POR TERNARIO ES: this.open ? "Cerrar" : "Abrir"
+        else{
+          return 'Abrir'
+        }
+      },
+      backGround(){
+        if (this.open){
+          return ['opened']
+      }//POR TERNARIO ES: this.open ? "opened" : "closed"
+      else{
+          return ['closed']
+        }
+      }
+    },
+    template:
+    `<div id="container" :class="backGround">
+      <h1>{{text}}</h1>
+      <button @click="open = !open"> {{label}} </button>
+      </div>
+    `
        
-      }).mount('#app');
-      console.log(vm);
-    </script>
+    }).mount('#app');
+    console.log(vm);
+</script>
+<style>
+  html,body{
+    height:100%;
+    margin: 0;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  #app #container{
+    display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+  }
+  button {
+        margin: 24px;
+        border: none;
+        background-color: white;
+        padding: 8px 24px;
+        border-radius: 12px;
+    }
+  .closed{
+    background-color: rgb(212, 119, 98);
+    
+  }
+  /**DE ÉSTA FORMA, JSON DIRECTO EN LA TAG, valida si open es true o false para asignar el valor a la class
+  -->>:class="{'opened':open,'closed':!open}" */
+  .opened{
+    background-color:rgb(98, 212, 98) ;
+    
+  }
+</style>
 </body>
 </html>
