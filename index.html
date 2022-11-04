@@ -21,6 +21,20 @@
         name:'',
         text:'Acceder a tu cuenta',
         open:false, 
+        posts:[
+          {
+        title:'Titulo 1',
+        description:'lorem ipsum die loregfghkjlhk'},
+        {
+        title:'Titulo 2',
+        description:'lorem ipsum die loregfghkjlhk'},
+        {
+        title:'Titulo 3',
+        description:'lorem ipsum die loregfghkjlhk'},
+        {
+        title:'Titulo 4',
+        description:'lorem ipsum die loregfghkjlhk'},
+      ]
        };
       },
       watch:{//Un watcher tiene que tener el nombre de la propiedad que está escuchando y especificamente podría ponerse la prop dentro de data()
@@ -42,13 +56,20 @@
     },
     template:
     `<div id="container" :class="backGround">
-      
         <h1>{{text}}</h1>
-      
       <div v-if="open">
         <h3>Hola {{name}}!</h3>
+
+        <div class="list">
+          <div class="item" v-for = "(item, i) in posts" :key="i">
+            <h4> {{item.title}} </h4>
+            <p>{{item.description}} </p>
+            
+          </div>
+
+        </div>
+
       </div>
-      
       <div v-else>
         <label>Username</label>
         <input type="text" v-if="!open" v-model="name">
@@ -90,13 +111,27 @@
     }
   .closed{
     background-color: rgb(212, 119, 98);
-    
   }
   /**DE ÉSTA FORMA, JSON DIRECTO EN LA TAG, valida si open es true o false para asignar el valor a la class
   -->>:class="{'opened':open,'closed':!open}" */
   .opened{
     background-color:rgb(98, 212, 98) ;
-    
+  }
+  .list{
+    display: flex;
+    flex-direction: column;
+  }
+  .item{
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    border: 1px solid black;
+  }
+  .title{
+    font-weight: 10px;
+    font-size: 1rem;
   }
 </style>
 </body>
