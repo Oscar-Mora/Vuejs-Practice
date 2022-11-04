@@ -14,8 +14,8 @@
   
 
 <script >
-    // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
-  const vm = Vue.createApp({
+    //app => Retorna nuestra aplicacion en si misma hecha en Vuejs
+  const app = Vue.createApp({
     data(){
       return{
         name:'',
@@ -61,12 +61,11 @@
         <h3>Hola {{name}}!</h3>
 
         <div class="list">
-          <div class="item" v-for = "(item, i) in posts" :key="i">
-            <h4> {{item.title}} </h4>
-            <p>{{item.description}} </p>
-            
-          </div>
-
+          <item
+          v-for="(item,i) in posts" 
+          :key="i"
+          :post="item"
+          />
         </div>
 
       </div>
@@ -84,8 +83,23 @@
       </div>
     `
        
-    }).mount('#app');
+    })
+    //.component() recibe 2 args principales, nombre del componente y la descripcion en un objeto json, que son las diferentes opciones de vuejs
+    app.component('item',{
+      props:["post"],
+      template:`
+      <div class="item">
+        <div class="title"> {{post.title}} </div>
+        <p>{{post.description}} </p>
+      </div>
+      `
+    })
     
+    const vm = app.mount('#app');//retorna el model vista de es Vue.js
+    /*De esta manera tengo la app dentro de su propia variable y
+     puedo agregarle elementos*/
+
+
 </script>
 <style>
   html,body{
