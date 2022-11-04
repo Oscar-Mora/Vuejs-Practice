@@ -11,7 +11,7 @@
 <body>
 
     <div id="app">
-    
+      
       
         </div>
 
@@ -20,23 +20,37 @@
       const vm = Vue.createApp({
         data(){
           return{
-            name:'Oscar',
-            lastName:'Mora',
-            now : new Date()
+            name:'Oscar Mora',
+            text:'Puerta cerrada',
+            open:false
+            
           };
         },
-        computed:{/*RECORDAR siempre hacer el return dentro de las computed functions*/
-          fullName(){
-            return this.name+''+this.lastName;
-          },
-          today(){
-            return this.now.toLocaleDateString();
+        watch:{/*RECORDAR no hacer watchers muy complejos
+LOS WATCHERS NO SE INVOCAN - Y NO HACEN RETURNS*/
+          text(valorNuevo, valorViejo){
+            console.log("watcher!", valorNuevo,valorViejo, this.text)
+          },//aqui se ve como podemos acceder al valor actual del text al final del proceso del watcher
+//EJERCICIO DE WATCHER, ABRIR O CERRAR PUERTA
+          open(value){
+            if (value){
+              this.text ="La puerta está abierta";
+            }
+            else{
+              this.text = "la puerta está cerrada";
+            }
           }
+
         },
 
         template:
-        `<p>{{fullName}}</p>
-         <p>{{today}}</p>
+        `<div><p>{{name}}</p>
+          <p>{{text}}</p>
+          <button @click="open = !open"> {{ open ? "Cerrar" : "Abrir"}}</button>
+          </div>
+        
+
+         
         `
        
       }).mount('#app');
