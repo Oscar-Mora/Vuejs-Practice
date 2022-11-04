@@ -11,7 +11,7 @@
 <body>
 
     <div id="app">
-      {{text}}
+    
         </div>
 
     <script >
@@ -19,9 +19,28 @@
       const vm=Vue.createApp({
         data(){
           return{
-            text:'Hola Mundo desde vue!'
+            text:'Hola Mundo desde vue!',
+            counter:0
           };
-        }
+        },
+        methods:{
+          increment(){
+            console.log('click!')
+            this.counter ++;
+          },
+          decrement(){
+            console.log('click!')
+            this.counter --;
+          },
+          submit(e){
+            e.prevent
+          }
+        },
+        template:
+          `<h1>{{counter}}</h1>
+          <button @click="increment" >incrementar</button>
+          <button @click="decrement" >disminuir</button>`
+        
       }).mount('#app');
       console.log(vm);
     </script>
