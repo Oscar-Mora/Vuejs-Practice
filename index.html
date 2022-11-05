@@ -28,11 +28,15 @@
           "tres"
         ],
         items2:[1000,2000,3000],
-        variableQueComunicaAlHijo:{
-          id:1,
-          nombre:'variable comunicadora',
-          desc:'soy una variable tipo JSON'
-        }
+        variableQueComunicaAlHijo:[
+          {"id":"1",
+          "name":"variable comunicadora",
+          "desc":"soy una variable tipo JSON"},
+
+          {"id":"2",
+          "name":"variable comunicadora",
+          "desc":"soy una variable tipo JSON"}
+      ]
             }
     },
     template:`
@@ -41,10 +45,17 @@
           {{item}}  
         </v-item>
         <v-item class="list" v-for="item2 in items2" :numbs="item2"> <!-- Aqui hago uso de v-bind para pasar propiedades y no hacer uso de slots-->
-        
         </v-item>
+
         <!-- para comunicar del padre al hijo hay que hacer un binding y pasar como props con tipado en el hijo para poder escucharlas y pintar en pantalla -->
-        <v-otroComponente :unNombreCualquiera="variableQueComunicaAlHijo"></v-otroComponente>
+        <!-- <v-otroComponente v-for="(vars,i) in variableQueComunicaAlHijo"  :key="i" >
+        
+          <div>id: {{ variableQueComunicaAlHijo[i].id}}</div>       
+          <div>name: {{ variableQueComunicaAlHijo[i].name}}</div> 
+          <div>description: {{ variableQueComunicaAlHijo[i].desc}}</div> 
+        </v-otroComponente> -->
+        <v-otroComponente  :unNombreCualquiera="variableQueComunicaAlHijo">
+      </v-otroComponente>
         
       </ul>
     
@@ -72,13 +83,22 @@
           desc:String
         }
       },
+      data(){
+        return{explicacion:'Aqui se usa comunicacion padre a hijo'}},
 
-      template:
+      template:// descomentando slot se ve la manera en como se trabaja desde el padre con la data
+      //y la manera en que corre actualmente esta app es trabajando la data en el hijo traída desde el padre.
       `
-      <div>
-        {{unNombreCualquiera}}
-        <slot> </slot>
-      </div>
+      <li>
+        <!--<slot></slot>
+        <br> -->
+        <div   >{{explicacion}}</div>
+        <div v-for="(vars,i) in unNombreCualquiera"  :key="i">
+          El id es = {{unNombreCualquiera[i].id}} ,<br> el nombre de la variables es = {{unNombreCualquiera[i].name}},<br>  y su descripcion es = {{unNombreCualquiera[i].desc}}.  
+        </div>
+        
+        
+      </li>
       `
     })
     
@@ -95,6 +115,7 @@
     margin: 0;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
+  
   #app #container{
     display: flex;
         justify-content: center;
