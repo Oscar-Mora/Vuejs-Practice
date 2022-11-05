@@ -20,41 +20,68 @@
   si no que también existen etiquetas contenedoras. 
   ejemplo un Modal, o un template reusable */
   const app = Vue.createApp({//2.- lo inyecto en el componente raíz
+    data(){
+      return{
+        items:[
+          "uno",
+          "dos",
+          "tres"
+        ],
+        items2:[1000,2000,3000],
+        variableQueComunicaAlHijo:{
+          id:1,
+          nombre:'variable comunicadora',
+          desc:'soy una variable tipo JSON'
+        }
+            }
+    },
     template:`
-      <div >
-        <v-layout>
-          
-          <template v-slot:header>
-          <button>  Titulo </button> <!--Slot se trae todo el contenido que sea hijo del componente v-header   -->
-          </template>
-
-          <template v-slot:content>
-          <div></div> <!-- Puede ir cualquier tipo de contenido aqui adentro, incluso otros componentes -->  
-          </template>
-        </layout>
+      <ul>
+        <v-item class="list" v-for="item in items"> <!-- una vez signando que hay slot dentro de v-item puedo generar en el componente donde usaré v-item, data que puedo usar dentro -->
+          {{item}}  
+        </v-item>
+        <v-item class="list" v-for="item2 in items2" :numbs="item2"> <!-- Aqui hago uso de v-bind para pasar propiedades y no hacer uso de slots-->
         
-      </div>
+        </v-item>
+        <!-- para comunicar del padre al hijo hay que hacer un binding y pasar como props con tipado en el hijo para poder escucharlas y pintar en pantalla -->
+        <v-otroComponente :unNombreCualquiera="variableQueComunicaAlHijo"></v-otroComponente>
+        
+      </ul>
     
     `   
     });
-    app.component('v-layout',{
-      template://1.-Genero el componente hijo y estructuro su template
+    app.component('v-item',{
+      props:{//LAS PROPS SE DECLARAN COMO UN JSON, POR BUENAS PRACTICAS
+        numbs:Number//[] //{}//null  //se puede asignar un valor null, como json o como arreglo o tipar el tipo de dato, DEJARÉ NUMBER por buenas practicas
+      },
+      template://1.-Genero el componente hijo y estructuro su template, en este ejemplo se está recibiendo por slot y por binding en los hijos
       `
-      <header> 
-
-        <slot name="header"></slot>
+      <li> 
+        {{numbs}}
+        <slot></slot> <!-- se crea el slot default, porque no tiene nombre y con eso ya podrémos asignar valores o contenido dentro de las tags li -->
         
-      </header>
+      </li>
       
-      <!-- <div>lorem ipsum</div> podemos volver slots por seccion dentro de componentes asignando nombres  -->
-
-      <div> 
-
-        <slot name="content"></slot>
-
-      </div>
       `
     });
+    app.component('v-otroComponente',{
+      props:{
+        unNombreCualquiera:{
+          id: Number,
+          name:String,
+          desc:String
+        }
+      },
+
+      template:
+      `
+      <div>
+        {{unNombreCualquiera}}
+        <slot> </slot>
+      </div>
+      `
+    })
+    
     
     
     const vm = app.mount('#app');
@@ -94,6 +121,8 @@
   .list{
     display: flex;
     flex-direction: column;
+    font-weight: 10px;
+    font-size: 1rem;
   }
   .item{
     padding-left: 2em;
