@@ -11,93 +11,53 @@
 <body>
   <div id="app">
   </div>
-  
 
 <script >
-    //app => Retorna nuestra aplicacion en si misma hecha en Vuejs
-  const app = Vue.createApp({
-    data(){
-      return{
-        name:'',
-        text:'Acceder a tu cuenta',
-        open:false, 
-        posts:[
-          {
-        title:'Titulo 1',
-        description:'lorem ipsum die loregfghkjlhk'},
-        {
-        title:'Titulo 2',
-        description:'lorem ipsum die loregfghkjlhk'},
-        {
-        title:'Titulo 3',
-        description:'lorem ipsum die loregfghkjlhk'},
-        {
-        title:'Titulo 4',
-        description:'lorem ipsum die loregfghkjlhk'},
-      ]
-       };
-      },
-      watch:{//Un watcher tiene que tener el nombre de la propiedad que está escuchando y especificamente podría ponerse la prop dentro de data()
-        open(value){
-          this.open ? this.text = "Cerrar Sesion":this.text="Acceder a tu cuenta";
-        }
-      },
-    computed:{
+
+  
+ /*los slots sirven para aprovechar la sintaxis de HTML y utilizar nuestros 
+ componentes.Así como en HTML donde no todas las etiquetas son de contenido,
+  si no que también existen etiquetas contenedoras. 
+  ejemplo un Modal, o un template reusable */
+  const app = Vue.createApp({//2.- lo inyecto en el componente raíz
+    template:`
+      <div >
+        <v-layout>
+          
+          <template v-slot:header>
+          <button>  Titulo </button> <!--Slot se trae todo el contenido que sea hijo del componente v-header   -->
+          </template>
+
+          <template v-slot:content>
+          <div></div> <!-- Puede ir cualquier tipo de contenido aqui adentro, incluso otros componentes -->  
+          </template>
+        </layout>
+        
+      </div>
+    
+    `   
+    });
+    app.component('v-layout',{
+      template://1.-Genero el componente hijo y estructuro su template
+      `
+      <header> 
+
+        <slot name="header"></slot>
+        
+      </header>
       
-      backGround(){
-        return this.open ? "opened" : "closed";
-      //   if (this.open){
-      //     return ['opened']
-      // }//POR TERNARIO ES: this.open ? "opened" : "closed"
-      // else{
-      //     return ['closed']
-      //   }
-      }
-    },
-    template:
-    `<div id="container" :class="backGround">
-        <h1>{{text}}</h1>
-      <div v-if="open">
-        <h3>Hola {{name}}!</h3>
+      <!-- <div>lorem ipsum</div> podemos volver slots por seccion dentro de componentes asignando nombres  -->
 
-        <div class="list">
-          <item
-          v-for="(item,i) in posts" 
-          :key="i"
-          :post="item"
-          />
-        </div>
+      <div> 
 
-      </div>
-      <div v-else>
-        <label>Username</label>
-        <input type="text" v-if="!open" v-model="name">
-      </div>
-      
+        <slot name="content"></slot>
 
-      <button @click="open = !open"> 
-        <!-- Aquí se hace uso de dos divs con condicion para mostrar el necesario segun el caso-->
-        <div v-if="!open">Acceder</div>
-        <div v-else>Salir</div>
-      </button>
-      </div>
-    `
-       
-    })
-    //.component() recibe 2 args principales, nombre del componente y la descripcion en un objeto json, que son las diferentes opciones de vuejs
-    app.component('item',{
-      props:["post"],
-      template:`
-      <div class="item">
-        <div class="title"> {{post.title}} </div>
-        <p>{{post.description}} </p>
       </div>
       `
-    })
+    });
     
-    const vm = app.mount('#app');//retorna el model vista de es Vue.js
-    /*De esta manera tengo la app dentro de su propia variable y
-     puedo agregarle elementos*/
+    
+    const vm = app.mount('#app');
 
 
 </script>
