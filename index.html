@@ -5,12 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>practica vue</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
-  <div id="app">
+  <div id="app"  clas="container mt-5">
   </div>
+  
 
 <script >
 
@@ -19,138 +22,41 @@
   const app = Vue.createApp({
     data(){
       return{
-       
-        objectArray:[
-          {nombre: 'mango ', cantidad: 100, descripcion:'soy un mango Roja'},
-          {nombre: 'fresa ', cantidad: 200, descripcion:'soy una fresa Verde'},
-          {nombre: 'sandia', cantidad: 300, descripcion:'soy una sandia Amarilla'},
-          {nombre: 'piña  ', cantidad: 400, descripcion:'soy una piña Naranja'}
-        ], 
-        nuevaFruta:"",
-        cantidadNuevaFruta:'',
-        total:0
+        fondo:'bg-warning',
+        color:false
       }
     },
     methods:{
-      agregarFruta(){
-        //para agregar algo auna variable contenedora, siempre hacer this. para traer su instancia
-        this.objectArray.push({ 
-            nombre:this.nuevaFruta,
-            cantidad:this.cantidadNuevaFruta,
-            descripcion:'sí soy fruta'
-          })
-          //ES MUY IMPORTANTE QUE CUANDO RECIBA VALORES, REINICIE LOS INPUTS, COMO LIMPIAR LA INFO
-        this.nuevaFruta='';
-        this.cantidadNuevaFruta='';
-
-      }
+      
     },
     computed:{
-      sumarFrutas(){
-        //accedemos con "this." a las variables que usaremos dentro de la computed function
-        this.total = 0;
-        for (fruta of this.objectArray){
-          this.total = this.total+ fruta.cantidad;
-        }
-        return this.total;// aqui se está devolviendo la suma de lo que hay en cada fruta en cantidad a la var total
-      }
+      
     },
     template:`
-      
-      
-      <h3> V-model </h3>
-      <p>Permite hacer conexiones directas entre el input de un html a la lógica de programación</p>
-      <p>Podríamos crear una nueva variable en data() y asignarle un string vacío</p>
-      <p>Después dentro del tag input del html como atributo asignamos el v-model="nombre de la variable que se creó en data"</p>
-      <p>para que pueda guardar el valor, de otro modo es con @keyup.enter="agregarFrutas" que llama a la funcion despues de teclear enter</p>
+      <div :class="['p-3',fondo]">
+        <h3> Estilos Reactivos </h3>
+        <p>En este ejemplo se está usando la cdn de bootstrap para trabajar con estilos reactivos,<br>
+          tendre que asignar el valor de la propiedad CSS que quiera estilizar a la variable que <br>
+          quiero utilizar dentro del atributo :class="[]" (atributo dinamico) se utiliza [] cuando son más de 1 atributos, sean o no dinamicos. <br>
+          El input a continuación  tiene la propiedad v-model= ENLAZADA a la variable fondo, utilizada para pintar éste contenedoren el que se lee.
+          <br>
+          Utilice propiedades como <i><b>bg-danger,  bg-warning,  bg-success  </b></i> para ver la reactividad por ejemplo...
+        </p>
+      </div>
       <br>
-      <label>nombre de la fruta: </label>
-
-      <input v-model="nuevaFruta" @keyup.enter="agregarFruta"/>
-      
-      <label>cantidad de la Fruta: </label>
-
-      <input v-model="cantidadNuevaFruta" @keyup.enter="agregarFruta"/>
-      
-      <button type="submit" @click="agregarFruta">Agregar</button>
-        
-      <li v-for="obj in objectArray"> 
-
-<!-- Aquí estamos haciendo uso de un input para manipular la data de cada registro en un input -->
-          <input type="number" v-model.number="obj.cantidad" >
-
-<!-- En la siguiente linea podemos visualizar que hay un botón que modifica la cantidad del registro para cada registro en + 1-->
-          <b>Nombre:</b> {{ obj.nombre}}<b>   Cantidad:</b> {{obj.cantidad}} <button @click="obj.cantidad = obj.cantidad +1"> + </button> <b>Descripcion:</b> {{obj.descripcion}}
-          <b v-if="obj.cantidad == 0 "> ---- Sin cantidad en Stock</b>
-          </li>
-          </ul>
-          <h1>Total: {{sumarFrutas}}</h1>
-   
+      <input type=text v-model="fondo" class="form-control my-3"/>
+      <div :class="{'bg-info':color, 'bg-success': !color }">
+        <h3>Evaluando la clase - Estilos Reactivos </h3>
+        <p>podemos hace preguntas desde dentro del atributo ej :class="{'bg-warinig':color,'bg-sucess':!color}" con las {} y decir, estila con ésta clase('bg-warning'), <i>cuando</i> (":") "color" sea "true"<br>
+          Y con la coma ","  separa el segundo conjunto como argumento que valida lo contrario en el valor de la variable, en este caso (color=falso) retorna el background color"success"
+        </p>
     `
     });
     
     const vm = app.mount('#app');
 
 </script>
-<style>
-  html,body{
-    height:100%;
-    width: 100%;
-    margin: 0;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  }
-  #app #container{
-    display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
-  }
-  li{
-    list-style-type:  none;
-  }
-  button {
-        margin: 24px;
-        border: solid darkslategrey;
-        background-color: white;
-        padding: 8px 24px;
-        border-radius: 12px;
-    }
-  input {
-      margin: 24px;
-      border: solid 3px rgb(59, 68, 68);
-      background-color: white;
-      padding: 8px 24px;
-      border-radius: 3px;
-      
-  }
-  .closed{
-    background-color: rgb(212, 119, 98);
-  }
-  /**DE ÉSTA FORMA, JSON DIRECTO EN LA TAG, valida si open es true o false para asignar el valor a la class
-  -->>:class="{'opened':open,'closed':!open}" */
-  .opened{
-    background-color:rgb(98, 212, 98) ;
-  }
-  .list{
-    display: flex;
-    flex-direction: column;
-    font-weight: 10px;
-    font-size: 1rem;
-  }
-  .item{
-    padding-left: 2em;
-    padding-right: 2em;
-    padding-top: 0;
-    padding-bottom: 0;
 
-    border: 1px solid black;
-  }
-  .title{
-    font-weight: 10px;
-    font-size: 1rem;
-  }
 </style>
 </body>
 </html>
