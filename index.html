@@ -32,15 +32,50 @@
         ]
             }
     },
-    
+  methods:{
+    pokemon(){
+    fetch('https://pokeapi.co/api/v2/pokemon/')
+    .then(res => res.json())
+    // .then(data=>{console.log(data.results[0].name)})
+    .then(data=>{
+      // console.log(data.results)
+      let arraNombres=[];
+      data.results.forEach(element => {
+      // console.log(element.name)
+      arraNombres.push(element.name);
+      // console.log(data.results)//traera toda la data url y name del pokemon
+        });
+     console.log(arraNombres); 
+      })
+      .catch(error => console.log(error))  
+    }
+    ,//>>>>>>>TRABAJANDO CON ASYNC AWAIT<<<<<<<<<<<<<<
+    async asyncKemon(){
+      try{
+         const res = await fetch('https://pokeapi.co/api/v2/pokemon/')
+         const data = await res.json()
+        //  console.log(data);//devuelve toda la data
+        //  console.log(data.results);//devuelve listado de los datos pokemon
+        //   data.results.map(pokemon=>{//con map pudimos acceder al nombre de los datos obtenidos en el data.results, estudiado en el console.log de la linea58 o anterior
+        //   console.log(pokemon.name);
+        //  })
+        let Nombres =[];
+         data.results.map(pokemon=>{Nombres.push(pokemon.name)})
+         console.log(Nombres);
+         
+          const sinBulva = Nombres.filter(pokemon => {pokemon.name !== 'bulbasaur'})
+           console.log(sinBulva);
+        }
+      catch (error) { 
+        console.log (error) 
+      }
+    }
+
+  },
     template:`
-      <ul>
-       <li v-for="fruta of frutas">
-        {{fruta}}
-        </li>
-      </ul>
-      <br>
-      <h3>pintando una lista de objetos</h3>
+      
+      
+      <h3 >pintando una lista de objetos USANDO INPUTS PARA MOSTRAR LOS ANALISIS DE LA DATA QUE TRAEMOS</h3>
       <ul>
         <li v-for="obj in objectArray"> {{obj}}</li>  
       </ul>
@@ -49,7 +84,12 @@
       <ul>
         <li v-for="obj in objectArray"> Nombre: {{ obj.nombre}} Descripcion: {{obj.descripcion}}</li>  
       </ul>
-      
+      <input @click="pokemon()" value="fetching con fetch,'click aquí'"/>
+      <br><h4>usando async await</h4>
+      <input @click="asyncKemon()" value="fetching async-await,'click aquí'"/>
+      <br>
+      <h3> Usando map()</h3>
+
     `
     });
     
