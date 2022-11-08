@@ -19,77 +19,73 @@
   const app = Vue.createApp({
     data(){
       return{
-        frutas:[
-          "fresa",
-          "Manzana",
-          "Pera"
-        ],
+       
         objectArray:[
-          {nombre: 'fruta 1', precio: 100, descripcion:'soy una fruta Roja'},
-          {nombre: 'fruta 2', precio: 200, descripcion:'soy una fruta Verde'},
-          {nombre: 'fruta 3', precio: 300, descripcion:'soy una fruta Amarilla'},
-          {nombre: 'fruta 4', precio: 400, descripcion:'soy una fruta Naranja'}
-        ]
-            }
-    },
-  methods:{
-    pokemon(){
-    fetch('https://pokeapi.co/api/v2/pokemon/')
-    .then(res => res.json())
-    // .then(data=>{console.log(data.results[0].name)})
-    .then(data=>{
-      // console.log(data.results)
-      let arraNombres=[];
-      data.results.forEach(element => {
-      // console.log(element.name)
-      arraNombres.push(element.name);
-      // console.log(data.results)//traera toda la data url y name del pokemon
-        });
-     console.log(arraNombres); 
-      })
-      .catch(error => console.log(error))  
-    }
-    ,//>>>>>>>TRABAJANDO CON ASYNC AWAIT<<<<<<<<<<<<<<
-    async asyncKemon(){
-      try{
-         const res = await fetch('https://pokeapi.co/api/v2/pokemon/')
-         const data = await res.json()
-        //  console.log(data);//devuelve toda la data
-        //  console.log(data.results);//devuelve listado de los datos pokemon
-        //   data.results.map(pokemon=>{//con map pudimos acceder al nombre de los datos obtenidos en el data.results, estudiado en el console.log de la linea58 o anterior
-        //   console.log(pokemon.name);
-        //  })
-        let Nombres =[];
-         data.results.map(pokemon=>{Nombres.push(pokemon.name)})
-         console.log(Nombres);
-         
-          const sinBulva = Nombres.filter(pokemon => {pokemon.name !== 'bulbasaur'})
-           console.log(sinBulva);
-        }
-      catch (error) { 
-        console.log (error) 
+          {nombre: 'mango ', cantidad: 100, descripcion:'soy un mango Roja'},
+          {nombre: 'fresa ', cantidad: 200, descripcion:'soy una fresa Verde'},
+          {nombre: 'sandia', cantidad: 300, descripcion:'soy una sandia Amarilla'},
+          {nombre: 'piña  ', cantidad: 400, descripcion:'soy una piña Naranja'}
+        ], 
+        nuevaFruta:"",
+        cantidadNuevaFruta:'',
+        total:0
       }
-    }
+    },
+    methods:{
+      agregarFruta(){
+        //para agregar algo auna variable contenedora, siempre hacer this. para traer su instancia
+        this.objectArray.push({ 
+            nombre:this.nuevaFruta,
+            cantidad:this.cantidadNuevaFruta,
+            descripcion:'sí soy fruta'
+          })
+          //ES MUY IMPORTANTE QUE CUANDO RECIBA VALORES, REINICIE LOS INPUTS, COMO LIMPIAR LA INFO
+        this.nuevaFruta='';
+        this.cantidadNuevaFruta='';
 
-  },
+      }
+    },
+    computed:{
+      sumarFrutas(){
+        //accedemos con "this." a las variables que usaremos dentro de la computed function
+        this.total = 0;
+        for (fruta of this.objectArray){
+          this.total = this.total+ fruta.cantidad;
+        }
+        return this.total;// aqui se está devolviendo la suma de lo que hay en cada fruta en cantidad a la var total
+      }
+    },
     template:`
       
       
-      <h3 >pintando una lista de objetos USANDO INPUTS PARA MOSTRAR LOS ANALISIS DE LA DATA QUE TRAEMOS</h3>
-      <ul>
-        <li v-for="obj in objectArray"> {{obj}}</li>  
-      </ul>
+      <h3> V-model </h3>
+      <p>Permite hacer conexiones directas entre el input de un html a la lógica de programación</p>
+      <p>Podríamos crear una nueva variable en data() y asignarle un string vacío</p>
+      <p>Después dentro del tag input del html como atributo asignamos el v-model="nombre de la variable que se creó en data"</p>
+      <p>para que pueda guardar el valor, de otro modo es con @keyup.enter="agregarFrutas" que llama a la funcion despues de teclear enter</p>
       <br>
-      <h3>pintando solo algunos atributos del Objeto en la lista</h3>
-      <ul>
-        <li v-for="obj in objectArray"> Nombre: {{ obj.nombre}} Descripcion: {{obj.descripcion}}</li>  
-      </ul>
-      <input @click="pokemon()" value="fetching con fetch,'click aquí'"/>
-      <br><h4>usando async await</h4>
-      <input @click="asyncKemon()" value="fetching async-await,'click aquí'"/>
-      <br>
-      <h3> Usando map()</h3>
+      <label>nombre de la fruta: </label>
 
+      <input v-model="nuevaFruta" @keyup.enter="agregarFruta"/>
+      
+      <label>cantidad de la Fruta: </label>
+
+      <input v-model="cantidadNuevaFruta" @keyup.enter="agregarFruta"/>
+      
+      <button type="submit" @click="agregarFruta">Agregar</button>
+        
+      <li v-for="obj in objectArray"> 
+
+<!-- Aquí estamos haciendo uso de un input para manipular la data de cada registro en un input -->
+          <input type="number" v-model.number="obj.cantidad" >
+
+<!-- En la siguiente linea podemos visualizar que hay un botón que modifica la cantidad del registro para cada registro en + 1-->
+          <b>Nombre:</b> {{ obj.nombre}}<b>   Cantidad:</b> {{obj.cantidad}} <button @click="obj.cantidad = obj.cantidad +1"> + </button> <b>Descripcion:</b> {{obj.descripcion}}
+          <b v-if="obj.cantidad == 0 "> ---- Sin cantidad en Stock</b>
+          </li>
+          </ul>
+          <h1>Total: {{sumarFrutas}}</h1>
+   
     `
     });
     
@@ -111,13 +107,24 @@
         width: 100%;
         height: 100%;
   }
+  li{
+    list-style-type:  none;
+  }
   button {
         margin: 24px;
-        border: none;
+        border: solid darkslategrey;
         background-color: white;
         padding: 8px 24px;
         border-radius: 12px;
     }
+  input {
+      margin: 24px;
+      border: solid 3px rgb(59, 68, 68);
+      background-color: white;
+      padding: 8px 24px;
+      border-radius: 3px;
+      
+  }
   .closed{
     background-color: rgb(212, 119, 98);
   }
