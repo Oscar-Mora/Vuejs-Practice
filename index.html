@@ -15,77 +15,45 @@
 <script >
 
   
- /*los slots sirven para aprovechar la sintaxis de HTML y utilizar nuestros 
- componentes.Así como en HTML donde no todas las etiquetas son de contenido,
-  si no que también existen etiquetas contenedoras. 
-  ejemplo un Modal, o un template reusable */
-  const app = Vue.createApp({//2.- lo inyecto en el componente raíz
+
+  const app = Vue.createApp({
     data(){
       return{
-        items:[
-          "uno",
-          "dos",
-          "tres"
+        frutas:[
+          "fresa",
+          "Manzana",
+          "Pera"
         ],
-        items2:[1000,2000,3000],
-        variableQueComunicaAlHijo:{
-          id:1,
-          nombre:'variable comunicadora',
-          desc:'soy una variable tipo JSON'
-        }
+        objectArray:[
+          {nombre: 'fruta 1', precio: 100, descripcion:'soy una fruta Roja'},
+          {nombre: 'fruta 2', precio: 200, descripcion:'soy una fruta Verde'},
+          {nombre: 'fruta 3', precio: 300, descripcion:'soy una fruta Amarilla'},
+          {nombre: 'fruta 4', precio: 400, descripcion:'soy una fruta Naranja'}
+        ]
             }
     },
+    
     template:`
       <ul>
-        <v-item class="list" v-for="item in items"> <!-- una vez signando que hay slot dentro de v-item puedo generar en el componente donde usaré v-item, data que puedo usar dentro -->
-          {{item}}  
-        </v-item>
-        <v-item class="list" v-for="item2 in items2" :numbs="item2"> <!-- Aqui hago uso de v-bind para pasar propiedades y no hacer uso de slots-->
-        
-        </v-item>
-        <!-- para comunicar del padre al hijo hay que hacer un binding y pasar como props con tipado en el hijo para poder escucharlas y pintar en pantalla -->
-        <v-otroComponente :unNombreCualquiera="variableQueComunicaAlHijo"></v-otroComponente>
-        
+       <li v-for="fruta of frutas">
+        {{fruta}}
+        </li>
       </ul>
-    
-    `   
-    });
-    app.component('v-item',{
-      props:{//LAS PROPS SE DECLARAN COMO UN JSON, POR BUENAS PRACTICAS
-        numbs:Number//[] //{}//null  //se puede asignar un valor null, como json o como arreglo o tipar el tipo de dato, DEJARÉ NUMBER por buenas practicas
-      },
-      template://1.-Genero el componente hijo y estructuro su template, en este ejemplo se está recibiendo por slot y por binding en los hijos
-      `
-      <li> 
-        {{numbs}}
-        <slot></slot> <!-- se crea el slot default, porque no tiene nombre y con eso ya podrémos asignar valores o contenido dentro de las tags li -->
-        
-      </li>
+      <br>
+      <h3>pintando una lista de objetos</h3>
+      <ul>
+        <li v-for="obj in objectArray"> {{obj}}</li>  
+      </ul>
+      <br>
+      <h3>pintando solo algunos atributos del Objeto en la lista</h3>
+      <ul>
+        <li v-for="obj in objectArray"> Nombre: {{ obj.nombre}} Descripcion: {{obj.descripcion}}</li>  
+      </ul>
       
-      `
+    `
     });
-    app.component('v-otroComponente',{
-      props:{
-        unNombreCualquiera:{
-          id: Number,
-          name:String,
-          desc:String
-        }
-      },
-
-      template:
-      `
-      <div>
-        {{unNombreCualquiera}}
-        <slot> </slot>
-      </div>
-      `
-    })
-    
-    
     
     const vm = app.mount('#app');
-
 
 </script>
 <style>
