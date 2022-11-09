@@ -1,4 +1,3 @@
-
 //1er paso. Hacemos variables globales, para detectar el formulario y la alerta
 //Detectaremos el formulario
 
@@ -21,7 +20,7 @@ const createActivity = (actividad) => {
 //funcion que guardar e LocalStorage
 const guardarDB = ()=> {
     //Aquí guardamos la info para que persiste aun hagamos ctrl+shift+R o F5
-    //en localstorage, seteamos el item con key rutina, diciendo que por cada item en arrayActividadeses
+    //en localstorage, seteamos el item con key rutina, diciendo que se guarde por cada item en arrayActividades 
     localStorage.setItem( 'rutina', JSON.stringify(arrayActividades));
     //pintamos en el front con drawDB()
     drawDB();
@@ -30,18 +29,17 @@ const guardarDB = ()=> {
 const drawDB = () => {
     //limpiamos la lista de actividades
     actividadesListUI.innerHTML = '';
-    //despues para pintar partimos de lo que tenemos en la DB
-    //se lee el arrayDeActividades de localstorage 'rutina' es el key de como guardamos en localsotrage'
+    /** despues para pintar partimos de lo que tenemos en la DB(LocalStorage)
+     * se lee el item en  localstorage 'rutina'que es lo que hemos guardado del arrayDeActividades */   
     arrayActividades = JSON.parse(localStorage.getItem('rutina'));
-    //testeamos lo que está trayendo
-    // console.log(arrayActividades);
-    //Validamos  si está vacío en LCLSTRGE
+    /*testeamos lo que está trayendo
+     * console.log(arrayActividades);
+     * Validamos  si está vacío en localStorage */
     if(arrayActividades == null){
         //pintalo vacío
         arrayActividades = [];
-    }
-    else{
-        //Sino pintalo con lo que tenemos el localStorage por cada elemento con stringTemplates
+    } else {
+        //Sino pintalo con lo que tenemos en localStorage por cada elemento con stringTemplates
         arrayActividades.forEach(element => {
             //usamos el += porque vamos a ir concatenando las actividades por cada elemento que existe dentro de LocalStorage
             //Antes de pintar al front hacemos una validacion para cambiar el estilo dependiendo el "estado"
@@ -57,8 +55,8 @@ const drawDB = () => {
 }
 //funcion eliminar
 const eliminarDB = (actividad) => {
-    //Aquí vamos a eliminar el item de LocalStorage
-    //Se crea la var donde se guardará el index a eliminar
+    /**Aquí vamos a eliminar el item de LocalStorage
+     *Se crea la var donde se guardará el index a eliminar*/    
     let indexArray;
     //recorremos los registros en localStorage
     arrayActividades.forEach((element, index)=>{

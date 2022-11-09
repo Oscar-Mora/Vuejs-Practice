@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+      </style>
+    
+
+</head>
+<body>
+    <div id="app" class=" container grid justify-items-center relative
+    mx-auto p-12px m-12 bg-gray-200 ">
+        
+        
+        <h1 class="text-6xl text-center">{{titulo}}</h1>
+        <hr>
+          <div name="input-container" class="container mx-auto text-center  mt-4 mb-4 static">
+            <input type="text"  v-model="nuevaTarea" v-on:keyup.enter="agregarTarea"
+            name="actividad" 
+            id="actividad" 
+            placeholder="Correr, Trotar, Abdominales.."
+            class=" mt-1 px-3 py-2 bg-white 
+            border shadow-sm border-slate-300 placeholder-slate-400 
+            focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:rounded-xl 
+            focus:translate-x-0.5
+            focus:scale-110
+            transition  delay-30 
+            w-auto rounded-md sm:text-sm focus:ring-1
+            hover:border-sky-300
+            ">
+            <button   @click="agregarTarea" 
+            class=" p-1.5 m-4 rounded-lg bg-sky-500 text-white 
+            hover:text-sky-500 
+            hover:border border-sky-500
+            hover:bg-gray-50
+            hover:translate-x-0.5
+            hover:scale-110
+            transition  delay-30 
+            "> Agregar Actividad
+            </button>
+          </div>
+        
+        <div id="container-tareas" v-for="(tarea, i ) in tareas" :key="i" 
+        class="grid place-content-between 
+        container mx-full 
+        mt-2 mb-2 max-w-md text-center pb-4 relative ">
+
+          <div id="container-tarea" :class="['flex border rounded-lg px-4 py-3 w-full',tarea.estado ?'bg-green-100 border-green-400 text-green-800 ':'bg-red-100 border-red-400 text-red-800 ']">
+                
+            <div class="w-72 text-left flex">
+                  {{i}} - {{tarea.nombre}} -  <p  v-if="tarea.estado==true">Done</p><p v-else> to do</p>
+            </div>
+            <div class="">
+              <button @click="editarTarea(i)" class="bg-green-700 mx-auto text-white pr-2 pl-2 mx-1">OK</button>
+              <button @click="eliminarTarea(i)" class="bg-red-700 mx-auto text-white pr-2 pl-2 mx-1">X</button>
+            </div>
+          </div>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
