@@ -5,42 +5,95 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>practica vue</title>
-    
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@next"></script>
 </head>
-<body>
+<body class="bg-gray-300"> 
+
 
     <div id="app">
     
       
         </div>
 
-    <script >
-      // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
-      const vm = Vue.createApp({
-        data(){
-          return{
-            name:'Oscar',
-            lastName:'Mora',
-            now : new Date()
-          };
+  <script >
+    // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
+    const vm = Vue.createApp({
+      data(){
+        return{
+          name:'Oscar',
+          lastName:'Mora',
+          now : new Date(),
+          mensaje:'',
+          contador:0,
+          btnMas:false,
+          btnMenos:false
+          
+        };
+      },
+      computed:{/*RECORDAR siempre hacer el return dentro de las computed functions*/
+        fullName(){
+          return this.name+''+this.lastName;
         },
-        computed:{/*RECORDAR siempre hacer el return dentro de las computed functions*/
-          fullName(){
-            return this.name+''+this.lastName;
-          },
-          today(){
-            return this.now.toLocaleDateString();
+        today(){
+          return this.now.toLocaleDateString();
+        },//SIEMPRE RECORDAR HACER RETURN EN LAS PROPS COMPUTADAS
+        invertido(){
+          //este metodo, divide el string por '', lo ordena alreves, y lo une por espacios de nuevo
+          return this.mensaje.split('').reverse().join('');
+        },
+        //aquí voy a manipular la barra de progreso
+        color(){
+          return{
+            'bg-red-600'  : this.contador <= 10,
+            'bg-amber-500': this.contador > 10 && this.contador <= 20,
+            'bg-amber-400': this.contador > 20 && this.contador <= 40,
+            'bg-amber-300': this.contador > 40 && this.contador <= 50,
+            'bg-green-300': this.contador > 50 && this.contador <= 65,
+            'bg-green-400': this.contador > 65 && this.contador <= 75,
+            'bg-green-500': this.contador > 75 && this.contador <= 100,
           }
         },
-
-        template:
-        `<p>{{fullName}}</p>
-         <p>{{today}}</p>
-        `
+        isDisabled(){
+          return  this.contador == 100 ? !this.btnMas : this.btnMas
+       },
+       isDisabled2(){
+          return  this.contador == 0 ? !this.btnMenos : this.btnMenos
+       }
        
-      }).mount('#app');
-      console.log(vm);
-    </script>
+      },
+      template:`
+      <h1>Propiedades Computadas </h1>
+      <p>{{fullName}}</p>
+      <p>{{today}}</p>
+      <hr>
+      <br> <p class="text-2xl">Trabajemos con inputs y propiedades computadas escriba una palabra</p>
+      <input type="text" class="border border-sky-300" v-model="mensaje" placeholder="Ingresa cualquier palabra">
+      <h3 class="text-xl">Con v-model asignamos el valor del input en el siguiente parrafo </h3>
+      <p class="text-xl">TEXTO DEL INPUT: {{mensaje}}</p>
+      <h3 class="text-xl">Con una propiedad invertida RETORNAMOS el mensaje invertido</h3>
+      <p class="text-xl">INVERTIDO: {{invertido}}</p>
+      <hr><br>
+      <h4 class="text-xl"> Hagamos otra propiedad computada con una barra de progreso...<br>
+        Esta usará la "propiedad computada" en el cambio del color de la barra, se utilizará Vanilla JS <br>
+        para hacer uso de un contador </h4>
+
+      <button @click="contador++" :disabled="isDisabled"
+      class="mx-2 px-2 py-2 rounded bg-sky-300 font-semibold">+</button>
+      
+      <button @click="contador--" :disabled="isDisabled2" 
+      class="mx-2 px-2 py-2 rounded bg-red-300 font-semibold">-</button>
+      
+      <p class="text-l font-semibold">CONTADOR: {{contador}}</p>  
+      <div class="w-full bg-gray-200 rounded-full h-6 relative dark:bg-gray-700">
+        <div class=" font-semibold bg-blue-600 h-6 rounded-full" relative
+        :style="{'width': contador + '%'}"
+        :class="color">{{contador}}%</div>
+      </div>
+      `//para usar estilos reactivos puedo usar un tipo de concatenacion <div :style="{'estilosName': atributoVuejs + 'más estilos'}">
+     
+    }).mount('#app');
+    
+  </script>
 </body>
 </html>
