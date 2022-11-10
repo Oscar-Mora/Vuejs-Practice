@@ -55,7 +55,8 @@
           1.-No hay binding 
           2.-Tiene que haber etiqueta <slot></slot> dentro del componente hijo o al instanciar se rompe y no muestra nada
           3.-Se puede trabajar con data del componente padre, usando v-for, por ejemplo, en el tag Hijo en la instancia dentro del componente padre (linea 58 de este archivo)  -->
-        <v-item class="list" v-for="item in items">Aquí se itera pidiendo al elemento usando slot {{item}} y puedo traer el array tambien {{items}} </v-item ><!-- una vez declarado que hay slot dentro de v-item componente, puedo generar data desde el padre para usar dentro del componente v-item,(aqui es la app)Aquí la data es  un atributo directo del componente APP  -->
+        <v-item class="list" v-for="item in items">Aquí se itera pidiendo al elemento usando slot {{item}} y puedo traer el array tambien {{items}} </v-item >
+          <!-- una vez declarado que hay slot dentro de v-item componente, puedo generar data desde el padre para usar dentro del componente v-item,(aqui es la app)Aquí la data es  un atributo directo del componente APP  -->
           
           <!--imprimiendo en el hijo por binding:
             1.-En la prop que mandamos al hijo podemos decirle que vaya el elemento o el array completo ver lineas 63 y 64/67 correspondientemente en este archivo
@@ -65,7 +66,7 @@
           
         <!-- para comunicar del padre al hijo hay que hacer un binding y pasar como props con tipado en el hijo para poder escucharlas y pintar en pantalla -->
         <v-otroComponente v-for="(vars,i) in varAlHijo" :key="i" :unNombreCualquiera="vars"/> 
-        <p>Puedo deducir que cuando se hace un solo tag de es porque se pinta la data así como se recibe, cuando se hace tag de apertura y cierre de componente es mejor hacer 2 tags, (apertura y cierre) pues permite se más explicitos en la anidacion si es que son objetos y así no obtener errores  </p>
+        <p>Puedo deducir que cuando se hace un solo tag de es porque se va a pintar la data así como se recibe, cuando se  quiere ser más explicitos en la anidacion si es que son objetos o arrays creo que es mejor hacer tag de apertura y cierre del componente, es mejor hacer los 2 tags, (apertura y cierre) pues permite así no obtener errores </p>
         
       </ul>
     
