@@ -21,77 +21,60 @@
     const vm = Vue.createApp({
       data(){
         return{
-          name:'Oscar',
-          lastName:'Mora',
-          now : new Date(),
-          mensaje:'',
+          saludo:'Ciclo de vida de Vuejs',
           contador:0,
-          btnMas:false,
-          btnMenos:false
-          
         };
       },
-      computed:{/*RECORDAR siempre hacer el return dentro de las computed functions*/
-        fullName(){
-          return this.name+''+this.lastName;
-        },
-        today(){
-          return this.now.toLocaleDateString();
-        },//SIEMPRE RECORDAR HACER RETURN EN LAS PROPS COMPUTADAS
-        invertido(){
-          //este metodo, divide el string por '', lo ordena alreves, y lo une por espacios de nuevo
-          return this.mensaje.split('').reverse().join('');
-        },
-        //aquí voy a manipular la barra de progreso
-        color(){
-          return{
-            'bg-red-600'  : this.contador <= 10,
-            'bg-amber-500': this.contador > 10 && this.contador <= 20,
-            'bg-amber-400': this.contador > 20 && this.contador <= 40,
-            'bg-amber-300': this.contador > 40 && this.contador <= 50,
-            'bg-green-300': this.contador > 50 && this.contador <= 65,
-            'bg-green-400': this.contador > 65 && this.contador <= 75,
-            'bg-green-500': this.contador > 75 && this.contador <= 100,
-          }
-        },
-        isDisabled(){
-          return  this.contador == 100 ? !this.btnMas : this.btnMas
-       },
-       isDisabled2(){
-          return  this.contador == 0 ? !this.btnMenos : this.btnMenos
-       }
-       
-      },
-      template:`
-      <h1>Propiedades Computadas </h1>
-      <p>{{fullName}}</p>
-      <p>{{today}}</p>
-      <hr>
-      <br> <p class="text-2xl">Trabajemos con inputs y propiedades computadas escriba una palabra</p>
-      <input type="text" class="border border-sky-300" v-model="mensaje" placeholder="Ingresa cualquier palabra">
-      <h3 class="text-xl">Con v-model asignamos el valor del input en el siguiente parrafo </h3>
-      <p class="text-xl">TEXTO DEL INPUT: {{mensaje}}</p>
-      <h3 class="text-xl">Con una propiedad invertida RETORNAMOS el mensaje invertido</h3>
-      <p class="text-xl">INVERTIDO: {{invertido}}</p>
-      <hr><br>
-      <h4 class="text-xl"> Hagamos otra propiedad computada con una barra de progreso...<br>
-        Esta usará la "propiedad computada" en el cambio del color de la barra, se utilizará Vanilla JS <br>
-        para hacer uso de un contador </h4>
+      
 
-      <button @click="contador++" :disabled="isDisabled"
-      class="mx-2 px-2 py-2 rounded bg-sky-300 font-semibold">+</button>
+      template:`
+      <p class="text-xl font-semibold">
+      {{saludo}}
+      </p>  
+      <button  @click="saludo='saludo cambiado'" 
+      class="bg-gray-900 text-white p-2  rounded-full">cambiar</button>
+
+      <button  @click="destruir()" 
+      class="bg-gray-900 text-white p-2  rounded-full">Destruir</button>
+      `,
       
-      <button @click="contador--" :disabled="isDisabled2" 
-      class="mx-2 px-2 py-2 rounded bg-red-300 font-semibold">-</button>
+      beforeCreate()
+      { console.log('beforeCreate')
+    },
+      created()
+      //Al crear los metodos, observadores y eventos, pero aún no accede al DOM.
+      //Aún no se puede acceder a 'el'  (#app)
+      {console.log('created')
+    },
+      beforeMount()
+      //se ejecuta antes de insertar al DOM
+      {console.log('beforeMount')
+    },
+      mounted()
+      //Se ejecuta al insertar al DOM
+      {console.log('mounted')
+    },
+      beforeUpdate()
+      //Al detectar un cambio, 
+      {console.log('beforeUpdate')
+    },
+      updated()
+      //Al realizar cambios, solo cuando se ejecutan los cambios exitosamente
+      {console.log('updated')
+    },
+      beforeDestroy(){
+      consoe.log('beforeDestroy')
+    },
+      destroyed(){
+        console.log('destroyed')
+      },
+      //DEPRECADO EL this.$destroy() fue para vuejs2 
+      //methods:{
+      // destruir(){
+      //     this.$destroy();
+      //   }
+      // }
       
-      <p class="text-l font-semibold">CONTADOR: {{contador}}</p>  
-      <div class="w-full bg-gray-200 rounded-full h-6 relative dark:bg-gray-700">
-        <div class=" font-semibold bg-blue-600 h-6 rounded-full" relative
-        :style="{'width': contador + '%'}"
-        :class="color">{{contador}}%</div>
-      </div>
-      `//para usar estilos reactivos puedo usar un tipo de concatenacion <div :style="{'estilosName': atributoVuejs + 'más estilos'}">
-     
     }).mount('#app');
     
   </script>
