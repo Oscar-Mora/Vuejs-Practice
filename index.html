@@ -5,21 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>practica vue</title>
-    
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
-  <div id="app">
-  </div>
-
+  <div id="app"> </div>
 <script >
-
-  
- /*los slots sirven para aprovechar la sintaxis de HTML y utilizar nuestros 
- componentes.Así como en HTML donde no todas las etiquetas son de contenido,
-  si no que también existen etiquetas contenedoras. 
-  ejemplo un Modal, o un template reusable */
-  const app = Vue.createApp({//2.- lo inyecto en el componente raíz
+  const app = Vue.createApp({
     data(){
       return{
         items:[
@@ -27,115 +19,49 @@
           "dos",
           "tres"
         ],
-        items2:[1000,2000,3000],
-        variableQueComunicaAlHijo:{
-          id:1,
-          nombre:'variable comunicadora',
-          desc:'soy una variable tipo JSON'
-        }
             }
+    },methods:{
+      // ESTE METODO SOLO ES PARA TENER UNA ACCION DESDE EL COMPONENTE PADRE
+      // VER 
+      remove(i){
+        //siempre ir validando paso a paso cualquier cosa que haga MUY IMPORTANTE
+        console.log(i);
+        //la siguiente funcion retorna todos los elementos menos el elegido, la logica está a la inversa
+        const items = this.items.filter((el, index)=>index !== i ); //Filter Docs-->https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+        //cuando no RE-renderiza hay que volver a asignar a una variable que ya tengamos renderizando o a la misma variable con la que estámos trabajando y podamos testearla en front
+        this.items=items
+      }
     },
-    template:`
+    template://html
+    `<!--Aqui veremos como la COMUNICACION DE HIJOS A PADRES
+      es a traves de methods-->
       <ul>
-        <v-item class="list" v-for="item in items"> <!-- una vez signando que hay slot dentro de v-item puedo generar en el componente donde usaré v-item, data que puedo usar dentro -->
-          {{item}}  
-        </v-item>
-        <v-item class="list" v-for="item2 in items2" :numbs="item2"> <!-- Aqui hago uso de v-bind para pasar propiedades y no hacer uso de slots-->
-        
-        </v-item>
-        <!-- para comunicar del padre al hijo hay que hacer un binding y pasar como props con tipado en el hijo para poder escucharlas y pintar en pantalla -->
-        <v-otroComponente :unNombreCualquiera="variableQueComunicaAlHijo"></v-otroComponente>
-        
+        <!-- Cuando solo sean strings podemos hacer una sola tag por componente--Asigno un key para trabajar con la data en el array, se hará un metodo para borrar el elemento elegido-Genero un metodo para eliminar el elemento-->
+        <v-item  v-for="(item, i ) in items" :key="i" 
+        @remove="remove(i)":numbs="item" >
+        <!--Con custome methods podemos hacer la emision de eventos, ver linea 52-53 y 60 de éste archivo, que muestra la declaracion de funcion e instancia desde el componente hijo para ser escuchada en el C padre, el cual recibe y procesa los datos-->
+        <!--El uso de la funcion remove, solo en el padre es mediante => click="remove(i)" se puede visualizar copiando en fragmento anterior en linea 40  /> -->
       </ul>
-    
-    `   
+    `,  
     });
     app.component('v-item',{
-      props:{//LAS PROPS SE DECLARAN COMO UN JSON, POR BUENAS PRACTICAS
-        numbs:Number//[] //{}//null  //se puede asignar un valor null, como json o como arreglo o tipar el tipo de dato, DEJARÉ NUMBER por buenas practicas
-      },
-      template://1.-Genero el componente hijo y estructuro su template, en este ejemplo se está recibiendo por slot y por binding en los hijos
-      `
-      <li> 
-        {{numbs}}
-        <slot></slot> <!-- se crea el slot default, porque no tiene nombre y con eso ya podrémos asignar valores o contenido dentro de las tags li -->
-        
-      </li>
-      
-      `
-    });
-    app.component('v-otroComponente',{
       props:{
-        unNombreCualquiera:{
-          id: Number,
-          name:String,
-          desc:String
+        numbs:String
+      },
+      methods:{
+        rm(){
+          this.$emit("remove")
+          //para emitir evento s al C.Padre tenemos que mandarlo con this.$emit()
+          //voy a poder enviar el nombre del evento y el valor que quiero emitir, en este caso solo quiero emitir el evento
         }
       },
-
-      template:
+      template://html
+      `<li @click="rm"> <!--No importa si cambio el nombre del evento-->
+        {{numbs}}
+       </li>
       `
-      <div>
-        {{unNombreCualquiera}}
-        <slot> </slot>
-      </div>
-      `
-    })
-    
-    
-    
+    });
     const vm = app.mount('#app');
-
-
 </script>
-<style>
-  html,body{
-    height:100%;
-    width: 100%;
-    margin: 0;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  }
-  #app #container{
-    display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
-  }
-  button {
-        margin: 24px;
-        border: none;
-        background-color: white;
-        padding: 8px 24px;
-        border-radius: 12px;
-    }
-  .closed{
-    background-color: rgb(212, 119, 98);
-  }
-  /**DE ÉSTA FORMA, JSON DIRECTO EN LA TAG, valida si open es true o false para asignar el valor a la class
-  -->>:class="{'opened':open,'closed':!open}" */
-  .opened{
-    background-color:rgb(98, 212, 98) ;
-  }
-  .list{
-    display: flex;
-    flex-direction: column;
-    font-weight: 10px;
-    font-size: 1rem;
-  }
-  .item{
-    padding-left: 2em;
-    padding-right: 2em;
-    padding-top: 0;
-    padding-bottom: 0;
-
-    border: 1px solid black;
-  }
-  .title{
-    font-weight: 10px;
-    font-size: 1rem;
-  }
-</style>
 </body>
 </html>
