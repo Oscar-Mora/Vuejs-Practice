@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>practica vue</title>
+    <title>Practica de v-model v-bind</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@next"></script>
 </head>
@@ -14,53 +14,70 @@
   const app = Vue.createApp({
     data(){
       return{
-        items:[
-          "uno",
-          "dos",
-          "tres"
-        ],
+        texto:'Hola Vue',
+        text:'Con v-model'
             }
     },methods:{
-      // ESTE METODO SOLO ES PARA TENER UNA ACCION DESDE EL COMPONENTE PADRE
-      // VER 
-      remove(i){
-        //siempre ir validando paso a paso cualquier cosa que haga MUY IMPORTANTE
-        console.log(i);
-        //la siguiente funcion retorna todos los elementos menos el elegido, la logica está a la inversa
-        const items = this.items.filter((el, index)=>index !== i ); //Filter Docs-->https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
-        //cuando no RE-renderiza hay que volver a asignar a una variable que ya tengamos renderizando o a la misma variable con la que estámos trabajando y podamos testearla en front
-        this.items=items
+      inputPadreFunction(e){
+        this.texto = e;
       }
     },
     template://html
-    `<!--Aqui veremos como la COMUNICACION DE HIJOS A PADRES
-      es a traves de methods-->
-      <ul>
-        <!-- Cuando solo sean strings podemos hacer una sola tag por componente--Asigno un key para trabajar con la data en el array, se hará un metodo para borrar el elemento elegido-Genero un metodo para eliminar el elemento-->
-        <v-item  v-for="(item, i ) in items" :key="i" 
-        @remove="remove(i)":numbs="item" >
-        <!--Con custome methods podemos hacer la emision de eventos, ver linea 52-53 y 60 de éste archivo, que muestra la declaracion de funcion e instancia desde el componente hijo para ser escuchada en el C padre, el cual recibe y procesa los datos-->
-        <!--El uso de la funcion remove, solo en el padre es mediante => click="remove(i)" se puede visualizar copiando en fragmento anterior en linea 40  /> -->
-      </ul>
+    `<!--Siempre cualquier template creado, sobre todo APP, debe tener una div contenedora, además de la div.#app-->
+    <div>
+    <!--CON V-MODEL-->
+    <!--asignamos al atributo reactivo(valueModel) la variable sobre la que va a actulizar(text), la recibimos como prop en el hijo-->
+    <p>{{text}}</p>
+    <v-inputModel v-bind:value="text" v-model:valueModel="text" />
+    <br><br>
+    <p>{{texto}}</p>
+    <v-input v-bind:value="texto" 
+    v-on:updateValue="inputPadreFunction" ><!--updateValue recibe el valor mandado y lo analiza(parsea en su propio metodo input )-->
+    
+        
+      </div>
     `,  
     });
-    app.component('v-item',{
+       app.component('v-inputModel',{
+        props:{
+          valueModel:String // 1.-recibimos la prop reactiva
+          //2.- Asignamos "valueModel" al atributo nativo "value" del input en el componente hijo para cachar el valor que nos dará el usuario
+          //3.-cachamos el valor en el evento nativo @input y lo mandamos de vuelta al padre con regresarValue como nota importante el argumento de this.$emit()tiene que decir"update:ValueModel" OSEA, El metodo tiene que ser update dos puntos":" y el nombre del atributo correspondiente"valueModel"
+          //4.-SIEMPRE usar V-MODEL y no el otro ejemplo demostativo con bind en la emision de eventos causa conflicto y no muestra v-model, a menos que se llame primero los eventos con v-model
+        },
+        methods:{
+          regresarValue(e){
+            console.log(this.$emit)
+            this.$emit("update:valueModel",e.target.value)
+          }
+        },
+        template://html
+        `
+        <input type="text" :value = "valueModel" @input="regresarValue" 
+        class="bg-sky-200 border border-4 rounded-lg border-sky-400 
+      focus:border-sky-200 focus:outline-none "/>
+        `
+      });
+      app.component('v-input',{
       props:{
-        numbs:String
+        value:String, //Aquí recibo el value(texto) y está asignado en el atributo value del input component, que justo es un input,hasta aqui, si cambia su valor en front no devuelve valor al padre, ver lineas 41(declaro la funcion handler(input) que manda  el evento updateValue, y el valor e.target.value) y 49( el v-on donde se cacha los values del input con el evento nativo input)
       },
       methods:{
-        rm(){
-          this.$emit("remove")
-          //para emitir evento s al C.Padre tenemos que mandarlo con this.$emit()
-          //voy a poder enviar el nombre del evento y el valor que quiero emitir, en este caso solo quiero emitir el evento
+        inputDelHijoFunction(e){
+          console.log(e.target.value)
+          //this$emit()
+          //recibe como 1er parametro 'el nombre del method que está en Padre'
+          //recibe como 2do param el valor que se va a procesar con la funcion en el padre que está escuchando por updateValue
+          this.$emit('updateValue', e.target.value)
         }
       },
       template://html
-      `<li @click="rm"> <!--No importa si cambio el nombre del evento-->
-        {{numbs}}
-       </li>
-      `
-    });
+      `<input type="text" v-bind:value="value" 
+      v-on:input="inputDelHijoFunction"
+      class="bg-gray-200 border border-4 rounded-lg border-zinc-400 
+      focus:border-stone-200 focus:outline-none "/><!--Es necesario estas dos clases para diseño contorno de input active -->
+      `});
+
     const vm = app.mount('#app');
 </script>
 </body>
