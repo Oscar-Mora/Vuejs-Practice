@@ -9,39 +9,71 @@
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
-
     <div id="app">
-    
-        </div>
-
-    <script >
-      // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
-      const vm=Vue.createApp({
+    <div>
+<script >
+  // src="app.js" esta es la very basic structure Vue.createApp({ data(){ return{ variable:'Valor'}; }       })<---- y podrá ser usado en algun html tag
+  const app = Vue.createApp({
         data(){
           return{
-            text:'Hola Mundo desde vue!',
-            counter:0
+            text:'Hola Mundo desde Componente Padre!',
+            
           };
         },
         methods:{
-          increment(){
-            console.log('click!')
-            this.counter ++;
-          },
-          decrement(){
-            console.log('click!')
-            this.counter --;
-          },
-          submit(e){
-            e.prevent
-          }
-        },
-        template:
-          `<h1>{{counter}}</h1>
-          <button @click="increment" >incrementar</button>
-          <button @click="decrement" >disminuir</button>`
         
-      }).mount('#app');
+        },
+        //provide() - inject() una funcionalidad más dentro de la configuracion del componente de Vue, 
+        //Generalmente  el proveedor es el componente padre o ancestro
+        //Y el comprobante receptor va a ser el que tenga la OPCION inject y va a poder leer datos de ese ancestro, se muestra ejemplo a continuacion
+       //1er forma de usar provide
+        provide:{
+          otroTexto:'Otro texto Hola mundo!',
+          otroTexto2:'para proveer a mis descendientes'
+        },
+        //2da forma de usar provide, si quisieramos que lo que provee escuche lo que hay en data() del padre o ancestro
+        /**provide(){
+         * return{
+         * otroTexto: this.text
+         * };
+         * },
+         * *Esto Estaría escuchando lo que hay en text dentro de data(9 del ancestro y lo proveería a los descendientes que escuchen con inject()*/
+        template://html
+          `
+          <div>
+          <h1>{{text}}</h1>
+          <v-hijo/>   
+          </div>
+        `
+      });
+      app.component('v-hijo',{
+        template://html
+        `
+          <div>
+            <h1>este titulo es desde el hijo</h1>
+            <v-nieto/>  
+          </div>
+        `
+      });
+      app.component('v-nieto',{
+        //1er forma de usar inject
+        inject:['otroTexto','otroTexto2'],
+        /**2da forma de usar inject
+         * inject:{
+         * otroTexto:{
+         *  from: ..... Y le ponemos desde donde lo va a leer
+         *  }
+         * }
+         * */
+        template://html
+        `
+        <div>
+          ESto es desde el nieto:
+        {{otroTexto}} - {{otroTexto2}}
+        </div>
+        `
+      }); 
+      const vm = app.mount('#app');
       console.log(vm);
     </script>
 </body>
